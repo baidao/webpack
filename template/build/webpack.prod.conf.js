@@ -39,25 +39,6 @@ var webpackConfig = merge(baseWebpackConfig, {
     new webpack.optimize.OccurrenceOrderPlugin(),
     // extract css into its own file
     new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
-    // generate dist index.html with correct asset hash for caching.
-    // you can customize output by editing /index.html
-    // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: {{#if_or unit e2e}}process.env.NODE_ENV === 'testing'
-        ? 'index.html'
-        : {{/if_or}}config.build.index,
-      template: 'index.html',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
-    }),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -97,6 +78,25 @@ if (config.build.productionGzip) {
       minRatio: 0.8
     })
   )
+}
+
+var pages = utils.getEntries('./src/modules', 'html')
+for (var page in pages) {
+    var conf = {
+        filename: config.build.assetsRoot + '/'+page + '.html',
+        template: pages[page], //模板路径
+        inject: true,
+        minify: {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeAttributeQuotes: true
+                // more options:
+                // https://github.com/kangax/html-minifier#options-quick-reference
+        },
+        chunksSortMode: 'dependency',
+        chunks:['manifest','vendor',page]
+    }
+    webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
 }
 
 module.exports = webpackConfig

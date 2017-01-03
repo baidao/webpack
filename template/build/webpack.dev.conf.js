@@ -25,12 +25,17 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    // https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true
-    }),
     new FriendlyErrors()
   ]
 })
+
+var pages = utils.getEntries('./src/modules', 'html')
+for (var page in pages) {
+  var conf = {
+    filename: page + '.html',
+    template: pages[page], //模板路径
+    inject: true,
+    chunks:['manifest', 'vendor', page]
+  }
+  module.exports.plugins.push(new HtmlWebpackPlugin(conf))
+}

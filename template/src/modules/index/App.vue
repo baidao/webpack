@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <img src="../../assets/logo.png">
     <hello></hello>
   </div>
 </template>
 
 <script>
-import Hello from './components/Hello'{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
+import Hello from '../../components/Hello'{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
 
 export default {
   name: 'app',
