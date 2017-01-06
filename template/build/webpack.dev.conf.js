@@ -29,10 +29,10 @@ module.exports = merge(baseWebpackConfig, {
   ]
 })
 
-var pages = utils.getEntries('./src/modules', 'html')
+var pages = utils.getEntries(config.source.client, 'html')
 for (var page in pages) {
   var conf = {
-    filename: page + '.html',
+    filename: `${page}.html`,
     template: pages[page], //模板路径
     inject: true,
     chunks:['manifest', 'vendor', page]

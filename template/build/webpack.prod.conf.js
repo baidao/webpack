@@ -80,23 +80,23 @@ if (config.build.productionGzip) {
   )
 }
 
-var pages = utils.getEntries('./src/modules', 'html')
+var pages = utils.getEntries(config.source.client, 'html')
 for (var page in pages) {
-    var conf = {
-        filename: config.build.assetsRoot + '/'+page + '.html',
-        template: pages[page], //模板路径
-        inject: true,
-        minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            removeAttributeQuotes: true
-                // more options:
-                // https://github.com/kangax/html-minifier#options-quick-reference
-        },
-        chunksSortMode: 'dependency',
-        chunks:['manifest','vendor',page]
-    }
-    webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
+  var conf = {
+    filename: `${config.build.assetsRoot}/${page}.html`,
+    template: pages[page], //模板路径
+    inject: true,
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: true
+      // more options:
+      // https://github.com/kangax/html-minifier#options-quick-reference
+    },
+    chunksSortMode: 'dependency',
+    chunks:['manifest','vendor',page]
+  }
+  webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
 }
 
 module.exports = webpackConfig

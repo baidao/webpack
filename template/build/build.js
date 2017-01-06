@@ -9,6 +9,15 @@ var ora = require('ora')
 var webpack = require('webpack')
 var webpackConfig = require('./webpack.prod.conf')
 
+var packageJson = require('../package.json')
+delete packageJson.devDependencies;
+packageJson.scripts = {
+  start: 'node index.js'
+};
+packageJson.config = {
+  port:8083
+};
+
 console.log(
   '  Tip:\n' +
   '  Built files are meant to be served over an HTTP server.\n' +
@@ -19,9 +28,10 @@ var spinner = ora('building for production...')
 spinner.start()
 
 var assetsPath = path.join(config.build.assetsRoot, config.build.assetsSubDirectory)
-rm('-rf', assetsPath)
+rm('-rf', config.build.root)
 mkdir('-p', assetsPath)
-cp('-R', 'static/*', assetsPath)
+cp('-R', config.source.server, config.build.root)
+JSON.stringify(packageJson, null, 4).to(`${config.build.root}/server/package.json`)
 
 webpack(webpackConfig, function (err, stats) {
   spinner.stop()
