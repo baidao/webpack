@@ -1,3 +1,5 @@
+var path = require('path');
+var glob = require('glob');
 var express = require('express');
 
 var application = (function () {
@@ -7,8 +9,9 @@ var application = (function () {
     };
     return {
         init: function () {
-            _server.get('/', function (req, res) {
-                res.send('hello world');
+            glob.sync(path.resolve(__dirname, './controller/*.js')).forEach(function (file) {
+                var controller = require(file);
+                _server[controller.method || 'get'](controller.uri, controller.handler);
             });
             return _server;
         },
