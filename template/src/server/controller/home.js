@@ -1,8 +1,11 @@
-module.exports = (function () {
+module.exports = (function() {
     return {
-        uri: '/',
-        handler: function (req, res) {
-            res.send('this is home');
-        }
+        context: '',
+        handlers: [{
+            uri: '/',
+            handler: function(req, res) {
+                res.send('this is home');
+            }
+        }]
     };
 })();

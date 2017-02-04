@@ -7,12 +7,16 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js"{{#unit}},
+    "build-test": "node build/build-test.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run"{{/unit}}{{#e2e}},
     "e2e": "node test/e2e/runner.js"{{/e2e}}{{#if_or unit e2e}},
     "test": "{{#unit}}npm run unit{{/unit}}{{#unit}}{{#e2e}} && {{/e2e}}{{/unit}}{{#e2e}}npm run e2e{{/e2e}}"{{/if_or}}{{#lint}},
     "lint": "eslint --ext .js,.vue src{{#unit}} test/unit/specs{{/unit}}{{#e2e}} test/e2e/specs{{/e2e}}"{{/lint}}
   },
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.13.3",
+    "glob": "^7.1.1",
     "vue": "^2.1.0",
     "vue-resource": "^1.0.3"
   },
@@ -49,13 +53,13 @@
     {{/if_eq}}
     {{/lint}}
     "eventsource-polyfill": "^0.9.6",
-    "express": "^4.13.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "friendly-errors-webpack-plugin": "^1.1.2",
     "function-bind": "^1.0.2",
     "html-webpack-plugin": "^2.8.1",
     "http-proxy-middleware": "^0.17.2",
+    "imports-loader": "^0.7.0",
     "json-loader": "^0.5.4",
     {{#unit}}
     "cross-env": "^3.1.3",

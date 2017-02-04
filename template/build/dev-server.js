@@ -16,14 +16,13 @@ var port = process.env.PORT || config.dev.port
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
-var app = express()
 var compiler = webpack(webpackConfig)
 
-var serverMiddleware = require(`.${config.source.server}/app`)
-app.use(serverMiddleware.init())
+var appServer = require(`.${config.source.server}/app`)
+var app = appServer.init()
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
-  publicPath: webpackConfig.output.publicPath,
+  publicPath: '/',
   quiet: true
 })
 
@@ -58,8 +57,7 @@ app.use(devMiddleware)
 app.use(hotMiddleware)
 
 // serve pure static assets
-var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
-app.use(staticPath, express.static('./static'))
+app.use(config.dev.assetsSubDirectory, express.static('./static'))
 
 var uri = 'http://localhost:' + port
 
@@ -67,14 +65,13 @@ devMiddleware.waitUntilValid(function () {
   console.log('> Listening at ' + uri + '\n')
 })
 
-module.exports = app.listen(port, function (err) {
+module.exports = appServer.startup({port, callback:function (err) {
   if (err) {
     console.log(err)
     return
   }
-
   // when env is testing, don't need open it
   if (process.env.NODE_ENV !== 'testing') {
     opn(uri)
   }
-})
+}})

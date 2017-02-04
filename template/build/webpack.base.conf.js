@@ -9,6 +9,7 @@ var env = process.env.NODE_ENV
 var cssSourceMapDev = (env === 'development' && config.dev.cssSourceMap)
 var cssSourceMapProd = (env === 'production' && config.build.productionSourceMap)
 var useCssSourceMap = cssSourceMapDev || cssSourceMapProd
+var remoteApi = env === 'development' ? config.dev.api : (env === 'testing' ? config.test.api : config.build.api)
 
 module.exports = {
   entry: utils.getEntries(config.source.client, 'js'),
@@ -25,7 +26,9 @@ module.exports = {
       'vue$': 'vue/dist/vue.common.js',
       'vue-resource': 'vue-resource/dist/vue-resource.common.js',
       {{/if_eq}}
-      'src': path.resolve(__dirname, '../src')
+      'src': path.resolve(__dirname, '../src'),
+      'components': path.resolve(__dirname, '../src/client/components'),
+      'lib': path.resolve(__dirname, '../src/lib')
     }
   },
   resolveLoader: {
@@ -84,6 +87,10 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      { 
+        test: require.resolve('../src/client/components/common.js'),
+        loader: "imports-loader?baseUrl=>'" + remoteApi + "'"
       }
     ]
   },
